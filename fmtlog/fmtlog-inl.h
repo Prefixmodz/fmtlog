@@ -34,7 +34,7 @@ SOFTWARE.
 #include <windows.h>
 #include <processthreadsapi.h>
 #else
-#include <sys/syscall.h>
+
 #include <unistd.h>
 #endif
 
@@ -293,7 +293,7 @@ public:
 #ifdef _WIN32
         uint32_t tid = static_cast<uint32_t>(::GetCurrentThreadId());
 #else
-        uint32_t tid = static_cast<uint32_t>(::syscall(SYS_gettid));
+        uint32_t tid = static_cast<uint32_t>(reinterpret_cast<uintptr_t>(scePthreadSelf()));
 #endif
         fmtlog::threadBuffer->nameSize =
             fmt::format_to_n(fmtlog::threadBuffer->name, sizeof(fmtlog::threadBuffer->name), "{}", tid).size;
